@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
+import "../styles.css"
 import { CSVLink } from 'react-csv';
 import { Line } from 'react-chartjs-2';
 import {
@@ -131,12 +132,7 @@ export default function Home() {
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-        <div style={{
-          display:'flex',
-          flexDirection:'column',
-          justifyContent:'center',
-          alignItems:'center'
-        }} className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm flex items-center justify-center column">
+        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm login">
           <h2 className="text-xl font-bold mb-4 text-center text-blue-700">Panel De Estadísticas</h2>
 
           <input
