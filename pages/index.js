@@ -164,12 +164,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex items-center justify-center">
-      <div className="max-w-7xl w-full bg-white p-8 rounded-lg shadow-lg">
+      <div className={styles.estadisticas}>
         <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">
           📊 Panel de Clicks desde WhatsApp
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className={styles.busqueda}>
           <input
             type="text"
             placeholder="Buscar por landing"
@@ -189,7 +189,8 @@ export default function Home() {
             placeholderText="Hasta"
             className="border border-gray-300 p-2 rounded shadow-sm w-full"
           />
-          <div className="flex flex-col space-y-2">
+        </div>
+        <div className="flex flex-col space-y-2">
             <label className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -209,8 +210,6 @@ export default function Home() {
               <span className="text-sm">Excluir sin fbclid</span>
             </label>
           </div>
-        </div>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {dominios.map((dom) => (
             <label key={dom} className="flex items-center space-x-2">
