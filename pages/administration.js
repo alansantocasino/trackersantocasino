@@ -254,7 +254,7 @@ export default function Home() {
             <tbody>
               {displayedData.map((c, i) => (
                 <tr key={i} className="hover:bg-gray-50">
-                  <td className="p-4 border border-black-200">{new Date(c.createdAt).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}</td>
+                  <td className="p-4 border border-black-200">{c.createdAt}</td>
                   <td className="p-4 border border-black-200">{c.landing}.{c.dominio}</td>
                   <td className="p-4 border border-black-200">{c.ip}</td>
                   <td className="p-4 border border-black-200 break-all">{c.user_agent?.slice(0, 70)}...</td>
