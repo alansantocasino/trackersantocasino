@@ -49,21 +49,15 @@ export default function Home() {
   }, [startDate, endDate, isLoggedIn]);
 
   const fetchData = async () => {
-    const res = await fetch(`/api/clicks`);
-    let data = await res.json();
+    const params = new URLSearchParams();
+    if (startDate) params.append('start', startDate.toISOString().split('T')[0]);
+    if (endDate) params.append('end', endDate.toISOString().split('T')[0]);
   
-    // Filtro por fecha exacta desde el frontend
-    if (startDate || endDate) {
-      data = data.filter(c => {
-        const clickDate = new Date(c.createdAt).toISOString().split('T')[0];
-        const startStr = startDate ? startDate.toISOString().split('T')[0] : null;
-        const endStr = endDate ? endDate.toISOString().split('T')[0] : null;
-  
-        if (startStr && clickDate < startStr) return false;
-        if (endStr && clickDate > endStr) return false;
-        return true;
-      });
-    }
+    const res = await fetch(`/api/clicks?${params.toString()}`);
+    const data = await res.json();
+    setClicks(data);
+    setFiltered(data);
+  };
   
     setClicks(data);
     setFiltered(data);
