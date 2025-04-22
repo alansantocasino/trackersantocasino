@@ -63,6 +63,13 @@ export default function Home() {
   
     const res = await fetch(`/api/clicks?${params.toString()}`);
     const data = await res.json();
+
+    // 👉 Aquí metemos el log
+    console.log('Datos crudos del backend:', data);
+
+    // Si quieres inspeccionar solo las fechas:
+    console.log('createdAt recibidos:', data.map(c => c.createdAt));
+
     setClicks(data);
     setFiltered(data);
   };
