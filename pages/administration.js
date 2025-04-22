@@ -58,10 +58,6 @@ export default function Home() {
     setClicks(data);
     setFiltered(data);
   };
-  
-    setClicks(data);
-    setFiltered(data);
-  };
 
   const handleSearch = (text) => {
     setSearch(text);
