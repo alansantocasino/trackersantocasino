@@ -5,6 +5,7 @@ export default async function handler(req, res) {
   await dbConnect();
 
   const { start, end } = req.query;
+  console.log('Parámetros recibidos del frontend:', { start, end });
 
   // Obtenemos las fechas pasadas como parámetro, si no están presentes, tomamos la fecha actual
   const startDate = start ? new Date(start) : new Date();
