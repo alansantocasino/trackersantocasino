@@ -6,23 +6,39 @@ export default async function handler(req, res) {
 
   const { start, end } = req.query;
 
-  // Traemos todos si hay rango de fechas
-  const rawClicks = await Click.find({}).sort({ createdAt: -1 }).limit(1000); // límite alto para asegurar cobertura
-
-  if (!start && !end) {
-    return res.json(rawClicks);
+  // Asegurarnos que hay fechas
+  if (!start || !end) {
+    return res.status(400).json({ error: 'Start and end dates are required' });
   }
 
-  // Filtrado por día exacto (ignorando hora)
-  const startStr = start ? new Date(start).toISOString().split('T')[0] : null;
-  const endStr = end ? new Date(end).toISOString().split('T')[0] : null;
+  const startDate = new Date(start);
+  const endDate = new Date(end);
 
-  const filteredClicks = rawClicks.filter(c => {
-    const clickDate = new Date(c.createdAt).toISOString().split('T')[0];
-    if (startStr && clickDate < startStr) return false;
-    if (endStr && clickDate > endStr) return false;
-    return true;
-  });
+  // Ajustamos el rango exacto de fechas a comparar
+  const startStr = startDate.toISOString().split('T')[0];
+  const endStr = endDate.toISOString().split('T')[0];
 
-  res.json(filteredClicks);
+  // Usamos una agregación que convierte el campo createdAt a formato 'YYYY-MM-DD'
+  const clicks = await Click.aggregate([
+    {
+      $addFields: {
+        createdAtDateOnly: {
+          $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
+        }
+      }
+    },
+    {
+      $match: {
+        createdAtDateOnly: { $gte: startStr, $lte: endStr }
+      }
+    },
+    {
+      $sort: { createdAt: -1 }
+    },
+    {
+      $limit: 500
+    }
+  ]);
+
+  res.json(clicks);
 }
