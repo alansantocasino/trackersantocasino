@@ -48,7 +48,6 @@ export default function Home() {
     fetchData();
   }, [startDate, endDate, isLoggedIn]);
 
-  // Función para ajustar las fechas a la zona horaria de Argentina (GMT-3)
   const adjustToArgentinaTimezone = (date) => {
     const argentinaOffset = -3 * 60; // GMT-3 en minutos
     const newDate = new Date(date);
@@ -64,10 +63,7 @@ export default function Home() {
     const res = await fetch(`/api/clicks?${params.toString()}`);
     const data = await res.json();
 
-    // 👉 Aquí metemos el log
     console.log('Datos crudos del backend:', data);
-
-    // Si quieres inspeccionar solo las fechas:
     console.log('createdAt recibidos:', data.map(c => c.createdAt));
 
     setClicks(data);
