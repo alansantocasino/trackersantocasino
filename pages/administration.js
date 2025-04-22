@@ -48,10 +48,18 @@ export default function Home() {
     fetchData();
   }, [startDate, endDate, isLoggedIn]);
 
+  // Función para ajustar las fechas a la zona horaria de Argentina (GMT-3)
+  const adjustToArgentinaTimezone = (date) => {
+    const argentinaOffset = -3 * 60; // GMT-3 en minutos
+    const newDate = new Date(date);
+    newDate.setMinutes(newDate.getMinutes() + argentinaOffset); // Ajusta a la zona horaria de Argentina
+    return newDate;
+  };
+
   const fetchData = async () => {
     const params = new URLSearchParams();
-    if (startDate) params.append('start', startDate.toISOString().split('T')[0]);
-    if (endDate) params.append('end', endDate.toISOString().split('T')[0]);
+    if (startDate) params.append('start', adjustToArgentinaTimezone(startDate).toISOString().split('T')[0]);
+    if (endDate) params.append('end', adjustToArgentinaTimezone(endDate).toISOString().split('T')[0]);
   
     const res = await fetch(`/api/clicks?${params.toString()}`);
     const data = await res.json();
@@ -107,7 +115,7 @@ export default function Home() {
   ];
 
   const chartData = {
-    labels: clicks.map(c => new Date(c.createdAt).toLocaleDateString()),
+    labels: clicks.map(c => new Date(c.createdAt).toLocaleDateString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })),
     datasets: [{
       label: 'Clicks',
       data: clicks.map((_, i) => i + 1),
@@ -243,7 +251,7 @@ export default function Home() {
             <tbody>
               {displayedData.map((c, i) => (
                 <tr key={i} className="hover:bg-gray-50">
-                  <td className="p-4 border border-black-200">{new Date(c.createdAt).toLocaleString()}</td>
+                  <td className="p-4 border border-black-200">{new Date(c.createdAt).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}</td>
                   <td className="p-4 border border-black-200">{c.landing}.{c.dominio}</td>
                   <td className="p-4 border border-black-200">{c.ip}</td>
                   <td className="p-4 border border-black-200 break-all">{c.user_agent?.slice(0, 70)}...</td>
