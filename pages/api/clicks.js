@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   const startOfDay = new Date(startDateInArgentina.setHours(0, 0, 0, 0));
   const endOfDay = new Date(endDateInArgentina.setHours(23, 59, 59, 999));
 
-  // Realizamos la consulta a la base de datos filtrando por fecha
+  // Aseguramos que solo se filtren los resultados del día completo
   const clicks = await Click.find({
     createdAt: {
       $gte: startOfDay,
