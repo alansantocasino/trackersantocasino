@@ -50,8 +50,16 @@ export default function Home() {
 
   const fetchData = async () => {
     const params = new URLSearchParams();
-    if (startDate) params.append('start', startDate.toISOString().split('T')[0]);
-    if (endDate) params.append('end', endDate.toISOString().split('T')[0]);
+    if (startDate) {
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0);
+      params.append('start', start.toISOString());
+    }
+    if (endDate) {
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
+      params.append('end', end.toISOString());
+    }
     const res = await fetch(`/api/clicks?${params.toString()}`);
     const data = await res.json();
     setClicks(data);
@@ -62,7 +70,7 @@ export default function Home() {
     setSearch(text);
     const lower = text.toLowerCase();
     const filteredList = clicks.filter(c =>
-      c.landing?.toLowerCase().includes(lower)
+      c.landing?.toLowerCase() === lower
     );
     setFiltered(filteredList);
   };
