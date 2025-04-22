@@ -6,12 +6,8 @@ export default async function handler(req, res) {
 
   const { start, end } = req.query;
 
-  if (!start) {
-    return res.status(400).json({ error: 'Start date is required' });
-  }
-
-  const startDate = new Date(start);
-  const endDate = end ? new Date(end) : new Date(start); // Si no hay end, usamos start como fin también
+  const startDate = start ? new Date(start) : new Date();
+  const endDate = end ? new Date(end) : new Date(startDate);
 
   const startOfDay = new Date(startDate.setHours(0, 0, 0, 0));
   const endOfDay = new Date(endDate.setHours(23, 59, 59, 999));
