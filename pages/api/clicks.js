@@ -20,8 +20,8 @@ export default async function handler(req, res) {
   // Realizamos la consulta a la base de datos filtrando por fecha
   const clicks = await Click.find({
     createdAt: {
-      $gte: new Date('2025-04-22T00:00:00.000Z'),
-      $lte: new Date('2025-04-22T23:59:59.999Z')
+      $gte: new Date(startDateUTC),
+      $lte: new Date(endDateUTC)
     }
   })
     .sort({ createdAt: -1 })
