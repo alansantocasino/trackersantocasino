@@ -6,39 +6,24 @@ export default async function handler(req, res) {
 
   const { start, end } = req.query;
 
-  // Asegurarnos que hay fechas
-  if (!start || !end) {
-    return res.status(400).json({ error: 'Start and end dates are required' });
+  if (!start) {
+    return res.status(400).json({ error: 'Start date is required' });
   }
 
   const startDate = new Date(start);
-  const endDate = new Date(end);
+  const endDate = end ? new Date(end) : new Date(start); // Si no hay end, usamos start como fin también
 
-  // Ajustamos el rango exacto de fechas a comparar
-  const startStr = startDate.toISOString().split('T')[0];
-  const endStr = endDate.toISOString().split('T')[0];
+  const startOfDay = new Date(startDate.setHours(0, 0, 0, 0));
+  const endOfDay = new Date(endDate.setHours(23, 59, 59, 999));
 
-  // Usamos una agregación que convierte el campo createdAt a formato 'YYYY-MM-DD'
-  const clicks = await Click.aggregate([
-    {
-      $addFields: {
-        createdAtDateOnly: {
-          $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
-        }
-      }
-    },
-    {
-      $match: {
-        createdAtDateOnly: { $gte: startStr, $lte: endStr }
-      }
-    },
-    {
-      $sort: { createdAt: -1 }
-    },
-    {
-      $limit: 500
+  const clicks = await Click.find({
+    createdAt: {
+      $gte: startOfDay,
+      $lte: endOfDay
     }
-  ]);
+  })
+    .sort({ createdAt: -1 })
+    .limit(500);
 
   res.json(clicks);
 }
