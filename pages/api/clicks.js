@@ -24,11 +24,15 @@ export default async function handler(req, res) {
   const startOfDay = new Date(startDateInArgentina.setHours(0, 0, 0, 0));
   const endOfDay = new Date(endDateInArgentina.setHours(23, 59, 59, 999));
 
-  // Aseguramos que solo se filtren los resultados del día completo
+  // Convertimos las fechas al formato ISO en UTC para asegurar que la base de datos pueda hacer la comparación correctamente
+  const startOfDayISO = startOfDay.toISOString();
+  const endOfDayISO = endOfDay.toISOString();
+
+  // Realizamos la consulta a la base de datos filtrando por fecha
   const clicks = await Click.find({
     createdAt: {
-      $gte: startOfDay,
-      $lte: endOfDay
+      $gte: startOfDayISO,
+      $lte: endOfDayISO
     }
   })
     .sort({ createdAt: -1 })
